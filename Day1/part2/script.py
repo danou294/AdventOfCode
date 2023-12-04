@@ -1,98 +1,64 @@
-# Créez un dictionnaire qui associe les noms en anglais aux chiffres
+# Dictionnaire pour convertir les noms en chiffres
 name_to_digit = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9
+    'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,
+    'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9
 }
 
-def find_first_number(line):
-    number = ""
-    position = -1
-    
+def convert_name_to_digit(name):
+    return name_to_digit.get(name, None)
+
+def find_first_number_or_name(line):
+    smallest_position = len(line)
+    result = None, -1
+
+    # Recherche de chiffres numériques
     for i, char in enumerate(line):
-        if char.isdigit():
-            number = char
-            position = i
-            break
-    
-    return number, position
-def find_last_number(line):
-    number = ""
-    position = -1
-    
-    for i, char in enumerate(reversed(line)):
-        if char.isdigit():
-            number = char
-            position = len(line) - 1 - i
-            break
-    
-    return number, position
-def find_name_positions(line):
-    name_positions = {}
-    
-    for name in name_to_digit.keys():
+        if char.isdigit() and i < smallest_position:
+            smallest_position = i
+            result = int(char), i
+
+    # Recherche de noms de chiffres
+    for name, digit in name_to_digit.items():
         position = line.find(name)
-        if position != -1:
-            name_positions[name] = position
-    
-    return name_positions
-
-    smallest_position = len(line)
-
-    # Recherche le chiffre numérique ayant la plus petite position
-    first_number, first_position = find_first_number(line)
-    if first_number is not None and first_position < smallest_position:
-        smallest_digit = first_number
-        smallest_position = first_position
-
-    # Recherche le chiffre littéral ayant la plus petite position
-    for name, position in find_name_positions(line).items():
-        if position < smallest_position:
-            if smallest_digit is None or isinstance(smallest_digit, str):
-                # Si smallest_digit est une chaîne de caractères, faites la correspondance avec name_to_digit
-                if name in name_to_digit:
-                    smallest_digit = name_to_digit[name]
-                else:
-                    smallest_digit = name
-            else:
-                smallest_digit = name
+        if 0 <= position < smallest_position:
             smallest_position = position
+            result = digit, position
 
-    return smallest_digit
-def find_and_map_smallest_number(line, mapping_dict):
-    smallest_position = len(line)
-    smallest_number = None
+    return result
 
-    for name, position in mapping_dict.items():
-        if name in line and position < smallest_position:
-            smallest_position = position
-            smallest_number = name
-        elif str(position) in line and position < smallest_position:
-            smallest_position = position
-            smallest_number = str(position)
+def find_last_number_or_name(line):
+    highest_position = -1
+    result = None, -1
 
-    if smallest_number is not None:
-        return smallest_number
-    else:
-        return None
+    # Recherche de chiffres numériques
+    for i, char in enumerate(reversed(line)):
+        pos = len(line) - 1 - i
+        if char.isdigit() and pos > highest_position:
+            highest_position = pos
+            result = int(char), pos
 
+    # Recherche de noms de chiffres
+    for name, digit in name_to_digit.items():
+        position = line.rfind(name)
+        if position > highest_position:
+            highest_position = position
+            result = digit, position
 
-
-
+    return result
 
 def main():
-    # Ouvre le fichier d'entrée en mode lecture
+    cumul = 0
+
     with open('input.txt', 'r') as file:
         for line in file:
-            print(find_name_positions(line))
-            print(find_and_map_smallest_number(find_name_positions(line),name_to_digit))
+            first_digit, _ = find_first_number_or_name(line)
+            last_digit, _ = find_last_number_or_name(line)
+
+            if first_digit is not None and last_digit is not None:
+                nombre = int(f"{first_digit}{last_digit}")
+                cumul += nombre
+
+    print('Cumul total :', cumul)
 
 if __name__ == "__main__":
     main()

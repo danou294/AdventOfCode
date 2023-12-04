@@ -17,5 +17,4 @@ Pour voir les solutions d'un jour spécifique, naviguez jusqu'au dossier corresp
 Bien que ces solutions soient personnelles et spécifiques à mon approche des puzzles, je suis ouvert aux suggestions et aux discussions. N'hésitez pas à créer des issues ou des pull requests si vous avez des idées d'amélioration ou des questions sur les solutions.
 
 
-## Licence
-[Inclure des informations sur la licence, si applicable, surtout si vous souhaitez que d'autres puissent utiliser vos solutions.]
+
